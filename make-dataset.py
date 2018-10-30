@@ -1,7 +1,8 @@
 import cv2
+import numpy as np
 import os
 
-name = str(input('type name of the face : '))
+name = str(input('type name of object : '))
 
 current_directory = os.getcwd()
 dataset_directory = os.path.join(current_directory, 'dataset')
@@ -22,9 +23,7 @@ while(True):
         for (ltx, lty, wid, hei) in face:
             frame_counter = frame_counter + 1
             cv2.rectangle(capture, (ltx, lty), (ltx + wid, lty + hei), (255, 0, 0), 2)
-            cv2.imwrite(os.path.join(output_directory, str(frame_counter) + '.png'), capture_gray[lty : lty + hei, ltx : ltx + wid])
-
-        cv2.imshow('make-dataset', capture)
+            cv2.imwrite(os.path.join(output_directory, str(frame_counter) + '.png'), capture_gray[lty : lty + 192, ltx : ltx + 192])
     else:
         break
 
