@@ -1,7 +1,8 @@
 import cv2
+import numpy as np
 import os
 
-name = str(input('type name of the face : '))
+name = str(input('type name of object : '))
 
 current_directory = os.getcwd()
 dataset_directory = os.path.join(current_directory, 'dataset')
