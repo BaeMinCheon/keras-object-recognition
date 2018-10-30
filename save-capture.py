@@ -1,10 +1,11 @@
 import cv2
-import keras
+import os
 
+current_directory = os.getcwd()
 video_capture = cv2.VideoCapture(0)
 frame_width = int(video_capture.get(3))
 frame_height = int(video_capture.get(4))
-video_out = cv2.VideoWriter("D:\\Git\\keras-object-recognition\\output.avi", cv2.VideoWriter_fourcc("M", "J", "P", "G"), 10, (frame_width, frame_height))
+video_out = cv2.VideoWriter(os.path.join(current_directory, 'capture.avi'), cv2.VideoWriter_fourcc("M", "J", "P", "G"), 10, (frame_width, frame_height))
 
 while(True):
     isOkay, capture = video_capture.read()
