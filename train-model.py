@@ -26,7 +26,7 @@ labels = []
 
 for path in datum_paths:
     image = cv2.imread(path)
-    image = cv2.resize(image, (192, 192), interpolation=cv2.INTER_AREA)
+    image = cv2.resize(image, dsize=(192, 192))
     image = keras.preprocessing.image.img_to_array(image)
     data.append(image)
 

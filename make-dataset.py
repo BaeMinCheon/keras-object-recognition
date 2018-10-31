@@ -24,16 +24,15 @@ with open(os.path.join(current_directory, 'yolov3.txt'), 'r') as file:
         shutil.rmtree(output_directory, ignore_errors=True)
 
 colors = np.random.uniform(0, 255, size=(len(classes), 3))
-scale = 0.00392
+scale = 0.001
 net = cv2.dnn.readNet(os.path.join(current_directory, 'yolov3.weights'), os.path.join(current_directory, 'yolov3.cfg'))
 confidence_threshold = 0.75
-NMS_threshold = 0.5
 
 while(True):
     isOkay, capture = video_input.read()
 
     if isOkay:
-        blob = cv2.dnn.blobFromImage(capture, scale, (416, 416), (0, 0, 0), True, False)
+        blob = cv2.dnn.blobFromImage(capture, scale, (224, 224), (0, 0, 0), True, False)
         net.setInput(blob)
         outputs = net.forward(get_output_layers(net))
 
