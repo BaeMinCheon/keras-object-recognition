@@ -105,3 +105,6 @@ venv.bak/
 
 # Pycharm
 .idea/
+
+# YOLO
+yolov3.weights

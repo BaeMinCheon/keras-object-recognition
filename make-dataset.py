@@ -1,31 +1,71 @@
 import cv2
 import numpy as np
 import os
+import shutil
 
-name = str(input('type name of object : '))
+def get_output_layers(net):
+    layer_names = net.getLayerNames()
+    output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+    return output_layers
 
 current_directory = os.getcwd()
 dataset_directory = os.path.join(current_directory, 'dataset')
-output_directory = os.path.join(dataset_directory, name)
-if not os.path.exists(output_directory):
-    os.makedirs(output_directory)
-
 video_input = cv2.VideoCapture(os.path.join(current_directory, 'capture.avi'))
-detector = cv2.CascadeClassifier(os.path.join(current_directory, 'haarcascade_frontalface_default.xml'))
-frame_counter = 0
+
+classes = None
+output_directories = []
+count_objects = []
+with open(os.path.join(current_directory, 'yolov3.txt'), 'r') as file:
+    classes = [line.strip() for line in file.readlines()]
+    for c in classes:
+        output_directory = os.path.join(dataset_directory, c)
+        output_directories.append(output_directory)
+        count_objects.append(0)
+        shutil.rmtree(output_directory, ignore_errors=True)
+
+colors = np.random.uniform(0, 255, size=(len(classes), 3))
+scale = 0.00392
+net = cv2.dnn.readNet(os.path.join(current_directory, 'yolov3.weights'), os.path.join(current_directory, 'yolov3.cfg'))
+confidence_threshold = 0.75
+NMS_threshold = 0.5
 
 while(True):
     isOkay, capture = video_input.read()
 
     if isOkay:
-        capture_gray = cv2.cvtColor(capture, cv2.COLOR_BGR2GRAY)
-        face = detector.detectMultiScale(capture_gray, 1.3, 5)
-        for (ltx, lty, wid, hei) in face:
-            frame_counter = frame_counter + 1
-            cv2.rectangle(capture, (ltx, lty), (ltx + wid, lty + hei), (255, 0, 0), 2)
-            cv2.imwrite(os.path.join(output_directory, str(frame_counter) + '.png'), capture_gray[lty : lty + 192, ltx : ltx + 192])
+        blob = cv2.dnn.blobFromImage(capture, scale, (416, 416), (0, 0, 0), True, False)
+        net.setInput(blob)
+        outputs = net.forward(get_output_layers(net))
+
+        height = capture.shape[0]
+        width = capture.shape[1]
+        class_ids = []
+        confidences = []
+        boxes = []
+
+        for out in outputs:
+            for detection in out:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > confidence_threshold:
+                    x = int(detection[0] * width)
+                    y = int(detection[1] * height)
+                    wid = int(detection[2] * width)
+                    hei = int(detection[3] * height)
+                    ltx = abs(x - int(wid / 2))
+                    lty = abs(y - int(hei / 2))
+
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([ltx, lty, wid, hei])
+
+                    count_objects[class_id] = count_objects[class_id] + 1
+                    if not os.path.exists(output_directories[class_id]):
+                        os.makedirs(output_directories[class_id])
+                    cv2.imwrite(os.path.join(output_directories[class_id], str(count_objects[class_id]) + '.png'), capture[lty : lty + hei, ltx : ltx + wid])
+
     else:
         break
 
 video_input.release()
-cv2.destroyAllWindows()
