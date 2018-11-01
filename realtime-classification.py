@@ -6,8 +6,8 @@ import os
 
 current_directory = os.getcwd()
 video_capture = cv2.VideoCapture(0)
-frame_width = int(video_capture.get(3))
-frame_height = int(video_capture.get(4))
+model = keras.models.load_model(os.path.join(current_directory, 'MyNetwork.model'))
+MLB = pickle.loads(open(os.path.join(current_directory, 'MLB.pickle'), 'rb').read())
 
 while (True):
     isOkay, capture = video_capture.read()
@@ -20,8 +20,6 @@ while (True):
         input_image = keras.preprocessing.image.img_to_array(input_image)
         input_image = np.expand_dims(input_image, axis=0)
 
-        model = keras.models.load_model(os.path.join(current_directory, 'MyNetwork.model'))
-        MLB = pickle.loads(open(os.path.join(current_directory, 'MLB.pickle'), 'rb').read())
         probability = model.predict(input_image)[0]
         IDXs = np.argsort(probability)[::-1][:2]
 
