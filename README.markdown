@@ -15,10 +15,13 @@
 	( `yolov3.cfg` & `yolov3.txt` are included in project )
 
 ### file list
-- ...
+- [in constructing...]
 
-### process
-- ...
+### how to setup
+- [in constructing...]
+
+### how to use
+- [in constructing...]
 
 ### reference
 - opencv video capture & file I/O
