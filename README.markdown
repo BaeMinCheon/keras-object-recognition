@@ -11,7 +11,7 @@
 	- imutils
 	- pickle
 - Y.O.L.O. version 3
-	- yolov3.weights
+	- [yolov3.weights](https://pjreddie.com/media/files/yolov3.weights)
 	( `yolov3.cfg` & `yolov3.txt` are included in project )
 
 ### file list
