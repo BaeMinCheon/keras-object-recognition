@@ -10,6 +10,8 @@ def get_output_layers(net):
 
 current_directory = os.getcwd()
 dataset_directory = os.path.join(current_directory, 'dataset')
+if not os.path.exists(dataset_directory):
+    os.makedirs(dataset_directory)
 video_input = cv2.VideoCapture(os.path.join(current_directory, 'capture.avi'))
 
 classes = None
