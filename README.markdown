@@ -1,5 +1,8 @@
 # realtime object recognition application with keras
 
+### notification
+- `bounding box` feature not implemented
+
 ### python version
 - 3.6
 
