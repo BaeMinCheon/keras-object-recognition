@@ -15,20 +15,20 @@ while (True):
     if isOkay:
         capture = cv2.flip(capture, 1)
 
-        input_image = cv2.resize(capture, (192, 192))
+        input_image = cv2.resize(capture, (96, 96))
         input_image = input_image.astype('float') / 255.0
         input_image = keras.preprocessing.image.img_to_array(input_image)
         input_image = np.expand_dims(input_image, axis=0)
 
         probability = model.predict(input_image)[0]
-        IDXs = np.argsort(probability)[::-1][:2]
+        IDXs = (np.argsort(probability))[::-1][:3]
 
         for (row, col) in enumerate(IDXs):
             label = "{} : {:.2f}%".format(MLB.classes_[col], probability[col] * 100)
             cv2.putText(capture, label, (10, (row * 30) + 25), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 255, 0), 2)
 
-        for (label, percentage) in zip(MLB.classes_, probability):
-            print("{}: {:.2f}%".format(label, percentage * 100))
+        # for (label, percentage) in zip(MLB.classes_, probability):
+        #     print("{}: {:.2f}%".format(label, percentage * 100))
 
         cv2.imshow("realtime-classification", capture)
 

@@ -17,7 +17,7 @@ import MyNetwork
 epochs = 20
 learning_rate = 1e-3
 batch_size = 20
-image_dimension = (192, 192, 3)
+image_dimension = (96, 96, 3)
 
 current_directory = os.getcwd()
 dataset_directory = os.path.join(current_directory, 'dataset')
@@ -31,7 +31,7 @@ labels = []
 
 for path in datum_paths:
     image = cv2.imread(path)
-    image = cv2.resize(image, dsize=(192, 192))
+    image = cv2.resize(image, dsize=(image_dimension[0], image_dimension[1]))
     image = keras.preprocessing.image.img_to_array(image)
     data.append(image)
 
