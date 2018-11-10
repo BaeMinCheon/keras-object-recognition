@@ -9,7 +9,7 @@
 ### dependencies
 - python packages
 	- tensorflow-gpu
-	- keras
+	- keras-gpu
 	- opencv
 	- imutils
 	- pickle
